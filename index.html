@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>吴雨琦 | UX / Interaction / UI Designer</title>
+    <meta
+      name="description"
+      content="吴雨琦个人作品集网站，聚焦复杂系统拆解、软硬结合体验设计、设计系统建设与高完成度视觉表达。"
+    />
+    <style>
+      :root {
+        --bg: #05070b;
+        --panel: rgba(12, 18, 29, 0.78);
+        --panel-2: rgba(17, 26, 43, 0.88);
+        --line: rgba(255, 255, 255, 0.08);
+        --text: #e8eef8;
+        --muted: rgba(232, 238, 248, 0.7);
+        --faint: rgba(232, 238, 248, 0.42);
+        --blue: #64b8ff;
+        --blue-2: #3a8fff;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+        background:
+          radial-gradient(circle at 18% 20%, rgba(100, 184, 255, 0.12), transparent 20%),
+          radial-gradient(circle at 88% 8%, rgba(255, 255, 255, 0.05), transparent 24%),
+          linear-gradient(180deg, #07111f 0%, #05070b 28%, #05070b 100%);
+        overflow-x: hidden;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 96px 96px;
+        mask-image: radial-gradient(circle at center, black 42%, transparent 100%);
+        opacity: 0.24;
+      }
+      a { color: inherit; text-decoration: none; }
+      .shell { width: min(1280px, calc(100vw - 40px)); margin: 0 auto; }
+      .nav {
+        position: sticky; top: 0; z-index: 50;
+        background: rgba(5, 7, 11, 0.86);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-inner {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 18px 0;
+      }
+      .brand { display: flex; gap: 12px; align-items: center; }
+      .brand-mark {
+        width: 42px; height: 42px; border-radius: 999px;
+        border: 1px solid var(--line); background: rgba(255,255,255,0.05);
+        display: grid; place-items: center; color: #cfe8ff; font-size: 12px; letter-spacing: .3em;
+      }
+      .nav-links { display: flex; gap: 10px; padding: 6px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,0.03); }
+      .nav-links a, .btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 11px 18px; border-radius: 999px; border: 1px solid transparent;
+        transition: .25s ease;
+      }
+      .nav-links a:hover, .btn:hover { border-color: rgba(255,255,255,0.16); transform: translateY(-1px); }
+      .btn-primary { background: rgba(100,184,255,0.14); border-color: rgba(100,184,255,0.22); color: #f2f8ff; }
+      .hero {
+        display: grid; grid-template-columns: .92fr 1.08fr; gap: 32px;
+        min-height: calc(100vh - 88px); align-items: center; padding: 26px 0 34px;
+      }
+      .eyebrow {
+        letter-spacing: .24em; text-transform: uppercase; font-size: 12px; color: #9fc9f5;
+      }
+      h1, h2, h3, p { margin: 0; }
+      h1 { font-size: clamp(3rem, 6vw, 5.4rem); line-height: 0.98; letter-spacing: -.04em; }
+      .hero-copy p.lead { margin-top: 28px; font-size: clamp(1.2rem, 2vw, 1.7rem); line-height: 1.8; color: rgba(232,238,248,.84); max-width: 42rem; }
+      .hero-copy .sub { margin-top: 18px; color: var(--faint); max-width: 31rem; line-height: 1.8; }
+      .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+      .chip {
+        border: 1px solid var(--line); background: rgba(255,255,255,0.04);
+        color: rgba(255,255,255,.72); border-radius: 999px; padding: 10px 14px;
+        font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+      }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .hero-note { margin-top: 16px; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: rgba(232,238,248,.34); }
+      .filmstrip {
+        position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 34px;
+        background: rgba(255,255,255,0.03); box-shadow: var(--shadow); padding: 16px;
+      }
+      .filmstrip:before, .filmstrip:after {
+        content: ""; position: absolute; top: 0; bottom: 0; width: 76px; pointer-events: none; z-index: 2;
+      }
+      .filmstrip:before { left: 0; background: linear-gradient(90deg, rgba(5,7,11,1), transparent); }
+      .filmstrip:after { right: 0; background: linear-gradient(270deg, rgba(5,7,11,1), transparent); }
+      .filmstrip-label {
+        position: absolute; top: 18px; left: 18px; z-index: 3;
+        padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line);
+        background: rgba(5,7,11,.55); backdrop-filter: blur(10px); font-size: 11px; letter-spacing: .24em;
+        text-transform: uppercase; color: rgba(255,255,255,.72);
+      }
+      .track {
+        display: flex; width: max-content; gap: 18px; padding: 58px 8px 8px;
+        animation: slide 28s linear infinite;
+      }
+      .filmstrip:hover .track { animation-play-state: paused; }
+      .card {
+        width: 280px; height: 420px; border-radius: 28px; overflow: hidden; position: relative;
+        border: 1px solid var(--line); background: #0b1320; flex: none;
+        box-shadow: 0 26px 80px rgba(0,0,0,.34);
+        transform: translateY(var(--y, 0px));
+      }
+      .card:nth-child(1n) { --y: 0px; }
+      .card:nth-child(2n) { --y: 36px; }
+      .card:nth-child(3n) { --y: -18px; }
+      .card:nth-child(4n) { --y: 52px; }
+      .card:nth-child(5n) { --y: -10px; }
+      .card .bg {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(circle at 20% 18%, rgba(255,255,255,.14), transparent 24%),
+          linear-gradient(180deg, rgba(100,184,255,.2), transparent 40%),
+          linear-gradient(180deg, rgba(5,7,11,0), rgba(5,7,11,.78));
+      }
+      .card .meta {
+        position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 2;
+        opacity: 0; transform: translateY(12px); transition: .35s ease;
+      }
+      .card:hover .meta { opacity: 1; transform: translateY(0); }
+      .card:hover { transform: translateY(calc(var(--y, 0px) - 8px)) scale(1.02); }
+      .card h3 { font-size: 22px; line-height: 1.2; }
+      .mini { margin-top: 8px; color: rgba(255,255,255,.68); line-height: 1.7; font-size: 14px; }
+      .meta-row { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);
+        color: rgba(255,255,255,.7); border-radius: 999px; padding: 8px 10px; font-size: 12px;
+      }
+      .section { padding: 70px 0; }
+      .section h2 { font-size: clamp(2rem, 4vw, 3.8rem); line-height: 1.02; letter-spacing: -.04em; }
+      .section .desc { margin-top: 18px; max-width: 56rem; color: var(--muted); line-height: 1.9; font-size: 16px; }
+      .grid { display: grid; gap: 18px; }
+      .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 28px; }
+      .work-card {
+        border: 1px solid var(--line); border-radius: 30px; overflow: hidden;
+        background: linear-gradient(180deg, rgba(17,26,43,.94), rgba(9,13,21,.94));
+        box-shadow: var(--shadow);
+      }
+      .work-card.featured { grid-column: 1 / -1; display: grid; grid-template-columns: .95fr 1.05fr; }
+      .work-visual { min-height: 320px; position: relative; }
+      .work-visual:before {
+        content: ""; position: absolute; inset: 0;
+        background:
+          radial-gradient(circle at 20% 24%, rgba(255,255,255,.12), transparent 20%),
+          radial-gradient(circle at 75% 20%, rgba(100,184,255,.16), transparent 26%),
+          linear-gradient(180deg, rgba(100,184,255,.18), transparent 50%),
+          linear-gradient(180deg, transparent, rgba(5,7,11,.86));
+      }
+      .work-body { padding: 26px; display: flex; flex-direction: column; justify-content: space-between; }
+      .work-body p { color: var(--muted); line-height: 1.9; }
+      .metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 18px; }
+      .metric {
+        border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.03); padding: 22px;
+      }
+      .metric .label { color: var(--faint); font-size: 12px; }
+      .metric .value { margin-top: 10px; font-size: clamp(1.4rem, 3vw, 2.4rem); letter-spacing: -.03em; }
+      .panel {
+        border: 1px solid var(--line); border-radius: 34px; background: var(--panel); box-shadow: var(--shadow); padding: 28px;
+      }
+      .about-grid { grid-template-columns: 1.08fr .92fr; }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .taglist { display: flex; flex-wrap: wrap; gap: 12px; }
+      .tag { padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: rgba(255,255,255,.72); }
+      .contact-grid { grid-template-columns: 1.2fr .8fr; }
+      .contact-list { display: grid; gap: 10px; }
+      .contact-item {
+        border: 1px solid var(--line); border-radius: 22px; padding: 16px 18px;
+        background: rgba(255,255,255,.03);
+      }
+      .footer { padding: 28px 0 46px; border-top: 1px solid var(--line); color: rgba(255,255,255,.45); font-size: 14px; }
+      .modal {
+        position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+        background: rgba(0,0,0,.82); z-index: 100; padding: 20px;
+      }
+      .modal.open { display: flex; }
+      .modal-card {
+        width: min(1100px, 100%); max-height: 88vh; overflow: auto;
+        border-radius: 34px; background: rgba(8,12,18,.96); border: 1px solid var(--line);
+        box-shadow: var(--shadow); padding: 28px;
+      }
+      .modal-head { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
+      .close {
+        width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center;
+        border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--text); cursor: pointer;
+      }
+      .project-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+      .project-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+      .project-section h4 { font-size: 22px; margin-bottom: 10px; }
+      .project-section p, .project-section li { color: var(--muted); line-height: 1.9; }
+      .project-section ul { margin: 8px 0 0; padding-left: 20px; }
+      @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+      @media (max-width: 1000px) {
+        .hero, .work-card.featured, .about-grid, .contact-grid { grid-template-columns: 1fr; }
+        .metrics, .timeline, .work-grid { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 720px) {
+        .shell { width: min(100vw - 24px, 1280px); }
+        .nav-inner { flex-wrap: wrap; gap: 12px; }
+        .nav-links { flex-wrap: wrap; justify-content: center; }
+        .hero { min-height: auto; padding-top: 42px; }
+        .metrics, .timeline, .work-grid { grid-template-columns: 1fr; }
+        .card { width: 248px; height: 370px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <div class="shell nav-inner">
+        <a class="brand" href="/">
+          <div class="brand-mark">WYQ</div>
+          <div>
+            <div style="font-weight:600">吴雨琦</div>
+            <div style="font-size:12px;color:var(--faint);margin-top:3px">UX / Interaction / UI Designer</div>
+          </div>
+        </a>
+        <div class="nav-links">
+          <a href="#work">Work</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a class="btn btn-primary" href="#work">View selected work</a>
+      </div>
+    </div>
+
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Portfolio 2026</div>
+          <h1>吴雨琦</h1>
+          <div style="margin-top:18px;font-size:clamp(1.2rem,2vw,1.8rem);color:rgba(232,238,248,.8);line-height:1.8">UX / Interaction / UI Designer</div>
+          <p class="lead">我关注复杂产品中的体验秩序，也在意每一个界面如何被真正使用。</p>
+          <p class="sub">Designing end-to-end experiences across apps, devices, and intelligent systems.</p>
+          <div class="chips">
+            <span class="chip">Strategy-first</span>
+            <span class="chip">Hardware + App</span>
+            <span class="chip">Design System</span>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#work">查看精选项目</a>
+            <a class="btn" href="#about">关于我与方法论</a>
+          </div>
+          <div class="hero-note">Designed for product design hiring reviews and fast portfolio screening</div>
+        </div>
+        <div class="filmstrip" aria-label="selected projects">
+          <div class="filmstrip-label">Selected projects / hover to pause</div>
+          <div class="track" id="track"></div>
+        </div>
+      </section>
+
+      <section class="section" id="work">
+        <div class="eyebrow">Selected Work</div>
+        <h2 style="margin-top:12px">五个项目，覆盖 App、硬件系统、设计系统与 B 端平台。</h2>
+        <p class="desc">这里把内容整理成更适合招聘方快速浏览的方式：先看整体，再点开每个项目的详细说明。核心是策略、结构与完成度，而不是堆图。</p>
+        <div class="grid work-grid">
+          <article class="work-card featured">
+            <div class="work-visual"></div>
+            <div class="work-body">
+              <div>
+                <div class="eyebrow">Mobile App / UX UI / Design System</div>
+                <h3 style="margin-top:10px;font-size:clamp(1.7rem,3vw,2.8rem)">ROKI APP V4.0 改版设计</h3>
+                <p style="margin-top:14px">智能厨电 App 的全链路体验重构。针对旧版体验痛点，主导架构梳理与场景再造，优化设备配网、烹饪流程、功能查找等核心路径，并完成整体视觉升级与设计系统搭建。</p>
+              </div>
+              <div class="meta-row">
+                <span class="pill">APP 全链路体验重构</span>
+                <span class="pill">统一视觉与交互语言</span>
+                <span class="pill">设计系统搭建</span>
+              </div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual"></div>
+            <div class="work-body">
+              <div>
+                <div class="eyebrow">Smart Hardware / Multi-screen UX UI</div>
+                <h3 style="margin-top:10px;font-size:28px">集成灶全价产品线界面设计</h3>
+                <p style="margin-top:14px">多硬件、多价位、多屏体验统一。独立完成 4 类硬件屏幕的全系列交互 UI 设计，建立全价位段统一体验与规范体系。</p>
+              </div>
+              <div class="meta-row">
+                <span class="pill">跨屏统一体验</span><span class="pill">品牌视觉符号</span><span class="pill">规范体系</span>
+              </div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual"></div>
+            <div class="work-body">
+              <div>
+                <div class="eyebrow">Smart Hardware / System UX / Visual Design</div>
+                <h3 style="margin-top:10px;font-size:28px">双子星智能烹饪系统</h3>
+                <p style="margin-top:14px">旗舰厨电系统中的复合交互创新。主导 i7 套系蒸烤一体机 UX 全案设计，创新构建彩屏 + 双旋钮复合交互模式。</p>
+              </div>
+              <div class="meta-row"><span class="pill">复杂功能极简操作</span><span class="pill">系统级 IA</span><span class="pill">高端视觉语言</span></div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual"></div>
+            <div class="work-body">
+              <div>
+                <div class="eyebrow">Design System / Brand / Cross-device</div>
+                <h3 style="margin-top:10px;font-size:28px">品牌产品设计系统</h3>
+                <p style="margin-top:14px">从分散交付到统一语言的体系化建设。围绕智能厨电产品与多终端触点，沉淀视觉语言、组件规范、图标逻辑、屏幕适配与品牌一致性原则。</p>
+              </div>
+              <div class="meta-row"><span class="pill">多终端规范</span><span class="pill">统一品牌语言</span><span class="pill">协作提效</span></div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual"></div>
+            <div class="work-body">
+              <div>
+                <div class="eyebrow">B-end Platform / Dashboard / UX UI</div>
+                <h3 style="margin-top:10px;font-size:28px">CCS 云平台</h3>
+                <p style="margin-top:14px">面向业务管理与数据监控的 B 端平台体验升级。针对复杂后台场景，优化信息组织、操作链路与数据呈现方式，建立更清晰、更高效的业务平台体验。</p>
+              </div>
+              <div class="meta-row"><span class="pill">信息架构整理</span><span class="pill">模块化组件</span><span class="pill">数据看板</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="grid about-grid">
+          <div class="panel">
+            <div class="eyebrow">About Snapshot</div>
+            <h2 style="margin-top:12px">从问题定义到体验落地，我更习惯把设计当成一套可执行的系统。</h2>
+            <div style="margin-top:18px;display:grid;gap:14px;color:var(--muted);line-height:1.9">
+              <p>工业设计背景让我天然关注产品形态、硬件限制与使用场景；而在智能硬件、App 与平台项目中的工作经历，又让我逐渐形成了从研究、策略到执行闭环的设计方法。</p>
+              <p>我更习惯在复杂约束里工作。因为真正重要的体验问题，往往不是单个按钮怎么画，而是系统如何被理解、流程如何被组织、品牌如何在不同终端里保持一致。</p>
+              <p>我希望做的设计，是既能说服业务，也能帮助研发落地，同时让用户在实际使用中感到清晰、顺手、可靠。</p>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="eyebrow">Personal Note</div>
+            <p style="margin-top:16px;font-size:1.2rem;line-height:1.9;color:rgba(232,238,248,.8)">我喜欢把复杂问题重新整理成有秩序的体验，也享受把理性结构做成有质感的界面。这种“既要想清楚，也要做漂亮”的状态，基本就是我最自然的工作方式。</p>
+            <div class="project-section">
+              <h4>工作经历</h4>
+              <div class="grid timeline" style="margin-top:14px">
+                <div class="metric">
+                  <div class="label">2025.02 - 至今</div>
+                  <div class="value" style="font-size:18px">华为 OD / 用户体验设计工程师</div>
+                  <p class="mini">参与 Pura X Max 折叠机新品体验研究与设计优化，主导大阔折尺寸比例相关研究、体验评估与设计推进。</p>
+                </div>
+                <div class="metric">
+                  <div class="label">2021.07 - 2025.02</div>
+                  <div class="value" style="font-size:18px">老板电器 / UX 设计师</div>
+                  <p class="mini">负责高端厨电、APP 与智能系统全链路 UX/UI 设计，搭建设计规范并推进跨团队协作。</p>
+                </div>
+              </div>
+            </div>
+            <div class="project-section">
+              <h4>能力标签</h4>
+              <div class="taglist" style="margin-top:14px">
+                <span class="tag">UX Strategy</span><span class="tag">Interaction Design</span><span class="tag">Visual Design</span><span class="tag">Design System</span><span class="tag">User Research</span><span class="tag">Hardware Experience</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="grid contact-grid">
+          <div class="panel">
+            <div class="eyebrow">Contact</div>
+            <h2 style="margin-top:12px">如果这个方向适合你的团队，我们可以继续聊更具体的项目细节。</h2>
+            <p class="desc" style="margin-top:14px">这个页面面向招聘场景做了快速浏览与深度阅读两套节奏，也欢迎直接通过简历或 PDF 作品集进入沟通。</p>
+            <div class="hero-actions" style="margin-top:20px">
+              <a class="btn btn-primary" href="mailto:hello@wuyuqi.design">hello@wuyuqi.design</a>
+              <a class="btn" href="#">下载简历 PDF（占位）</a>
+            </div>
+          </div>
+          <div class="panel contact-list">
+            <div class="contact-item"><strong>微信</strong><div style="margin-top:8px;color:var(--muted)">WeChat Placeholder</div></div>
+            <div class="contact-item"><strong>LinkedIn / 即刻 / 小红书</strong><div style="margin-top:8px;color:var(--muted)">可在后续替换为真实链接</div></div>
+            <div class="contact-item"><strong>简历与作品集</strong><div style="margin-top:8px;color:var(--muted)">建议后续补一版正式 PDF 作品集</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        © 2026 吴雨琦 Portfolio. Designed for product design hiring conversations.
+      </div>
+    </main>
+
+    <div class="modal" id="modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-head">
+          <div>
+            <div class="eyebrow" id="m-kicker"></div>
+            <h3 id="m-title" style="margin-top:10px;font-size:clamp(1.8rem,4vw,3.4rem);line-height:1.05;letter-spacing:-.04em"></h3>
+            <p id="m-subtitle" style="margin-top:12px;font-size:1.2rem;color:rgba(232,238,248,.8);line-height:1.8"></p>
+            <div class="project-meta" id="m-meta"></div>
+          </div>
+          <button class="close" id="closeBtn">✕</button>
+        </div>
+        <div class="project-section">
+          <h4>项目概览</h4>
+          <p id="m-summary"></p>
+        </div>
+        <div class="project-section">
+          <h4>挑战与洞察</h4>
+          <ul id="m-insights"></ul>
+        </div>
+        <div class="project-section">
+          <h4>设计策略</h4>
+          <ul id="m-strategy"></ul>
+        </div>
+        <div class="project-section">
+          <h4>结果与价值</h4>
+          <ul id="m-results"></ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const projects = [
+        {
+          key: "roki",
+          kicker: "Mobile App / UX UI / Design System",
+          title: "ROKI APP V4.0 改版设计",
+          subtitle: "智能厨电 App 的全链路体验重构",
+          summary: "针对旧版体验痛点，主导架构梳理与场景再造，优化设备配网、烹饪流程、功能查找等核心路径，并完成整体视觉升级与设计系统搭建。",
+          meta: ["APP 全链路体验重构", "统一视觉与交互语言", "设计系统搭建"],
+          insights: [
+            "多业务并行导致导航负担过重。",
+            "设备控制与内容浏览之间跳转成本高。",
+            "新用户首次配网与首次烹饪缺少引导闭环。"
+          ],
+          strategy: [
+            "以任务完成为主线，重做首页入口逻辑与设备页信息层级。",
+            "用统一卡片语言承接设备、内容和服务，减少认知断层。",
+            "同步沉淀状态、按钮、卡片和导航规则，为后续多品类扩展提供稳定底层。"
+          ],
+          results: [
+            "核心功能查找效率提升 32%。",
+            "联网率提升 18%。",
+            "操作错误率下降 22%。",
+            "获 2023 iF 设计奖、UXDA 中国优秀奖。"
+          ]
+        },
+        {
+          key: "stove",
+          kicker: "Smart Hardware / Multi-screen UX UI",
+          title: "集成灶全价产品线界面设计",
+          subtitle: "多硬件、多价位、多屏体验统一",
+          summary: "独立完成 4 类硬件屏幕的全系列交互 UI 设计，建立全价位段统一体验与规范体系。",
+          meta: ["多硬件跨屏统一体验", "原创视觉符号", "建立品类设计规范体系"],
+          insights: [
+            "不同机型界面风格断裂，用户迁移成本高。",
+            "高低价位硬件能力不同，但体验秩序必须一致。",
+            "品牌特征需要可落地、可复用的视觉锚点。"
+          ],
+          strategy: [
+            "建立共性骨架 + 硬件适配层的体验框架。",
+            "定义智慧光圈与竞速等品牌视觉符号。",
+            "通过图标、层级、栅格和动效节奏的规范化，压缩重复沟通成本。"
+          ],
+          results: ["设计效率提升 35%。", "单项目周期平均缩短 2 周。", "设计规范纳入集团标准体系。", "行业内首创特征视觉标识落地。"]
+        },
+        {
+          key: "gemini",
+          kicker: "Smart Hardware / System UX / Visual Design",
+          title: "双子星智能烹饪系统",
+          subtitle: "旗舰厨电系统中的复合交互创新",
+          summary: "主导 i7 套系蒸烤一体机 UX 全案设计，创新构建彩屏 + 物理双旋钮复合交互模式，重构从选菜到烹饪完成的全流程。",
+          meta: ["复杂功能的极简操作", "系统级信息架构设计", "高端视觉语言定义"],
+          insights: [
+            "厨房环境中的认知负荷与动作限制让纯触控并不理想。",
+            "高端硬件不等于高端体验，信息拥挤会直接破坏使用信心。",
+            "旗舰体验的本质不是信息更多，而是每一步更确定。"
+          ],
+          strategy: [
+            "让屏幕承担信息表达与确认，让旋钮承担快速调整与盲操效率。",
+            "将关键状态抽象为统一视觉节奏，强化连续感。",
+            "通过高对比层级和金属质感细节，回应旗舰产品应有的品质感。"
+          ],
+          results: ["产品量产上市。", "用户满意度 4.7 / 5.0。", "交互方案纳入集团设计标准。"]
+        },
+        {
+          key: "system",
+          kicker: "Design System / Brand / Cross-device",
+          title: "品牌产品设计系统",
+          subtitle: "从分散交付到统一语言的体系化建设",
+          summary: "围绕智能厨电产品与多终端触点，沉淀视觉语言、组件规范、图标逻辑、屏幕适配与品牌一致性原则。",
+          meta: ["多终端设计规范", "统一品牌语言", "提升协作效率"],
+          insights: [
+            "设计系统最大的难点不是画组件，而是定义边界。",
+            "过去的规范更多是交付资料，而不是活的工作方法。",
+            "要在统一与灵活之间找到长期可用的平衡。"
+          ],
+          strategy: [
+            "基础层沉淀颜色、字体、图标、间距、反馈逻辑。",
+            "组件层保证跨项目复用的一致性与研发映射效率。",
+            "应用层通过终端与品类差异化规则避免系统僵化。"
+          ],
+          results: ["支撑多项目高效复用。", "强化团队协作与设计质量控制。"]
+        },
+        {
+          key: "ccs",
+          kicker: "B-end Platform / Dashboard / UX UI",
+          title: "CCS 云平台",
+          subtitle: "面向业务管理与数据监控的 B 端平台体验升级",
+          summary: "针对复杂后台场景，优化信息组织、操作链路与数据呈现方式，建立更清晰、更高效的业务平台体验。",
+          meta: ["复杂信息架构整理", "模块化组件思路", "数据看板与业务页面协同"],
+          insights: [
+            "B 端设计的关键不是信息多，而是信息是否被组织成真正可用的决策界面。",
+            "需要先梳理角色、任务与指标之间的映射关系。",
+            "复杂后台的目标是让业务更清晰，而不是让页面更复杂。"
+          ],
+          strategy: [
+            "采用模块化信息区块，保证页面随业务增长继续扩展。",
+            "通过浅底蓝白体系强化数据可读性。",
+            "让图表与业务列表围绕同一任务上下文协同展示。"
+          ],
+          results: ["突出“复杂业务清晰化”的能力。", "作为 B 端能力证明项目展示。"]
+        }
+      ];
+
+      const track = document.getElementById('track');
+      const modal = document.getElementById('modal');
+      const closeBtn = document.getElementById('closeBtn');
+      const fields = {
+        kicker: document.getElementById('m-kicker'),
+        title: document.getElementById('m-title'),
+        subtitle: document.getElementById('m-subtitle'),
+        meta: document.getElementById('m-meta'),
+        summary: document.getElementById('m-summary'),
+        insights: document.getElementById('m-insights'),
+        strategy: document.getElementById('m-strategy'),
+        results: document.getElementById('m-results')
+      };
+
+      function makeCard(project) {
+        const el = document.createElement('button');
+        el.className = 'card';
+        el.type = 'button';
+        el.innerHTML = `
+          <div class="bg"></div>
+          <div class="meta">
+            <div class="eyebrow">${project.kicker}</div>
+            <h3 style="margin-top:8px">${project.title}</h3>
+            <p class="mini">${project.summary}</p>
+            <div class="meta-row">${project.meta.map((m) => `<span class="pill">${m}</span>`).join('')}</div>
+          </div>
+        `;
+        el.addEventListener('click', () => openModal(project));
+        return el;
+      }
+
+      const repeated = [...projects, ...projects];
+      repeated.forEach((p) => track.appendChild(makeCard(p)));
+
+      function openModal(project) {
+        fields.kicker.textContent = project.kicker;
+        fields.title.textContent = project.title;
+        fields.subtitle.textContent = project.subtitle;
+        fields.meta.innerHTML = project.meta.map((m) => `<span class="pill">${m}</span>`).join('');
+        fields.summary.textContent = project.summary;
+        fields.insights.innerHTML = project.insights.map((i) => `<li>${i}</li>`).join('');
+        fields.strategy.innerHTML = project.strategy.map((i) => `<li>${i}</li>`).join('');
+        fields.results.innerHTML = project.results.map((i) => `<li>${i}</li>`).join('');
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+      function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+      window.projects = projects;
+    </script>
+  </body>
+</html>
